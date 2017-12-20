@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+	
+	    <!-- JSZip library -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.6.0/jszip.min.js"></script>
+	
+	 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<style>
+	#gridContainer {
+   padding-top: 80px;
+}
+
+.options {
+    padding: 50px;
+    margin-top: 10px;
+    background-color: rgb(98, 119, 137);
+	color:#ffffff;
+	display: none;
+}
+
+.caption {
+    font-size: 18px;
+    
+}
+
+.option {
+    margin-top: 10px;
+}
+
+.option > span {
+    margin-right: 10px;
+}
+
+.option > .dx-selectbox {
+    display: inline-block;
+    
+}
+.footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color:#eceff1;
+   color: white;
+   text-align: center;
+   height:30px;
+}
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+}
+
+</style>
+
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!-- <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/> -->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+				<script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.1.0.min.js"></script>
+		
+			<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.11/angular.min.js"></script>
+		
+			<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.1.8/css/dx.common.css" />
+			<link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/17.1.8/css/dx.light.css" />
+			<script type="text/javascript" src="https://cdn3.devexpress.com/jslib/17.1.8/js/dx.all.js"></script>
+ </head>
+
+ 
+<body class="dx-viewport">
+<form class="form-signin" method="post" action="/items/post" style="padding-top:100px;"  >
+	<div class="form-group"> <!--Project-->
+		<label for="project_id" class="control-label col-md-2 w3-left"  style="padding-left:150px;">Project</label>
+		<div class="col-md-4">
+			<select class="form-control" name="project_id" id="project_id">
+				<option selected="true" disabled="disabled">Choose Project</option>
+				<% for(var i=0; i < proje.length; i++) { %>
+				<option value="<%= proje[i].name %>"><%= proje[i].name %></option>
+				<% } %>
+			</select>
+		</div>
+	</div>
+   
+    <div class="form-group"  > <!-- TestTag Name -->
+	<label for="Testcasetag" class="control-label col-md-2 w3-left"  >Testcasetag</label>
+	<div class="col-md-4">
+	<select class="form-control" name="Testcasetag" id="Testcasetag">
+	</select>
+	</div>
+	</div>
+
+
+
+	<div class="form-group" >
+	<button type="submit" class="btn btn-default" name="btn-save2" id="btn-submit2" style="background-color:yellow;margin-left:auto;margin-right:auto;display:block;margin-top:22%;margin-bottom:0%">>Submit</button>
+	</div>
+</form>   
+				  
+		  
+				  
+				  
+				  
+
+				  
+   <div class="navbar navbar-default navbar-fixed-top right" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">TAFFY<span style="font-size:px;">alpha</span></a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+           <li><a href="#about">About</a></li>
+          </ul>
+        </div>
+      </div>
+   </div>
+  
+  
+   
+
+  
+ 
+     <div class="demo-container">        
+         <div id="gridContainer"></div>
+			<div class="options">
+				<div class="caption">Options</div>
+				<div class="apply-filter option">
+					<span>Apply Filter</span>
+					<div id="useFilterApplyButton"></div>
+				</div>
+				<div class="option">
+					<div id="filterRow"></div>
+				</div>
+				<div class="option">
+					<div id="headerFilter"></div>
+				</div>
+			</div>
+			
+       
+      </div>
+	  
+  <div class="footer" style="color:#37474f;">
+             Tech Mahindra 2016.
+            <a class="grey-text text-darken-4 right" title="Contact Devendra" target="_blank" >Designed and Maintained by Retail IST Team</a>
+            </div>
+
+
+
+
+
+<script>
+$('select#project_id').change(function() {
+$.ajax({
+url: "/items/getTestcastags",
+type: "POST",
+data: {project_id:$(this).val()},
+dataType:"json",
+success: function(data)
+{
+$("#Testcasetag").empty();
+for(var i=0;i<data.testtagname.length;i++){
+console.log(data.testtagname[i].name);
+$("#Testcasetag").append($("<option></option>").val(data.testtagname[i].value).html(data.testtagname[i].value));
+}
+
+}
+});
+});
+
+</script>
+
+
+
+
+ <script>
+ 
+ 
+ $(document).ready(function(){
+  $('.dropdown-submenu a.test').on("click", function(e){
+    $(this).next('ul').toggle();
+    e.stopPropagation();
+    e.preventDefault();
+  });
+});
+ 
+ 
+
+ 
+ 
+ 
+ 
+ 
+ 
+  $(function(){
+			function logEvent(eventName)
+			{
+				var logList = $("#events ul"),
+				newItem = $("&lt;li>;", { text: eventName });
+				logList.prepend(newItem);
+			}
+
+
+			$(function()
+			{
+				
+				var dataGrid = $("#gridContainer").dxDataGrid({
+				dataSource: orders,
+				columnAutoWidth: true,
+				showColumnLines: true,
+				showRowLines: true,
+				rowAlternationEnabled: true,
+				columnAutoWidth: true,
+				allowRowResizing: true,
+				RowAutoWidth: true,
+				allowcolumnResizing: true,
+				RowChooser: {
+				enabled: true
+				},
+				selection: {
+				mode: "multiple"
+				},
+				scrolling: {
+				mode: "horizontal"
+				},
+				"export": {
+				enabled: true,
+				fileName: "Orders",
+				allowExportSelectedData: true
+				},
+
+				filterRow: {
+				visible: true,
+				applyFilter: "auto"
+				},
+				paging: {
+				enabled: false
+				},
+				editing: {
+				mode: "batch",
+				allowUpdating: true
+				},
+				searchPanel: {
+				visible: true,
+				width: 240,
+				placeholder: "Search..."
+				}, sorting: {
+				mode: "none"
+				},
+
+
+				columns: [ {
+				dataField: "Test Script/Test Case Title(Text)",
+				alignment: "right",
+				width: 230,
+
+				}, {
+				dataField: "Test Script/Test Case Description(Text)",
+				alignment: "right",
+				width: 400,
+
+				}, {
+				dataField: "Creator(Text)-TestScript"
+
+				}, {
+
+				dataField: "Owner(Text)-TestScript"
+				}, {
+
+				dataField: "Step Description(Text)-TestScript"
+				},
+				{
+
+				dataField: "Expected Result(Text)-TestScript"
+				},
+				{
+
+				dataField: "weight(Text)"
+				},
+				{
+
+				dataField: "Priority(Text)"
+				},
+				{
+
+				dataField: "Estimate in hour(Text)"
+				},
+				{
+
+				dataField: "Application(Text) (Name : MOTSID)"
+				},
+				{
+
+				dataField: "Regression/Progression(Text)"
+				},
+				{
+
+				dataField: "TestPhase(Text)"
+				},
+				{
+
+				dataField: "Non MOTS Team(Text)"
+				},
+				{
+
+				dataField: "Testing Group(Text)"
+				},
+				{
+
+				dataField: "User 1(Text)"
+				},{
+
+				dataField: "User 2(Text)"
+				},{
+
+				dataField: "User 3(Text)"
+				},{
+
+				dataField: "User 4(Text)"
+				},
+				{
+
+				dataField: "User 5(Text)"
+				},
+				{
+
+				dataField: "Test Description(Text)"
+				},
+				{
+
+				dataField: "Expected Result(Text)-TestCase"
+				},
+				{
+
+				dataField: "Interface"
+				}],
+				
+	
+				
+				
+				onEditingStart: function(e) {
+				logEvent("EditingStart");
+				},
+				onInitNewRow: function(e) {
+				logEvent("InitNewRow");
+				},
+				onRowInserting: function(e) {
+				logEvent("RowInserting");
+				},
+				onRowInserted: function(e) {
+				logEvent("RowInserted");
+				},
+				onRowUpdating: function(e) {
+				logEvent("RowUpdating");
+				},
+				onRowUpdated: function(e) {
+				logEvent("RowUpdated");
+				},
+				onRowRemoving: function(e) {
+				logEvent("RowRemoving");
+				},
+				onRowRemoved: function(e) {
+				logEvent("RowRemoved");
+				}
+				}).dxDataGrid('instance');
+
+				var applyFilterTypes = [{
+				key: "auto",
+				name: "Immediately"
+				}, {
+				key: "onClick",
+				name: "On Button Click"
+				}];
+
+				$("#useFilterApplyButton").dxSelectBox({
+				items: applyFilterTypes,
+				value: applyFilterTypes[0].key,
+				valueExpr: "key",
+				displayExpr: "name",
+				onValueChanged: function(data) {
+				dataGrid.option("filterRow.applyFilter", data.value);
+				}
+				});
+
+				$("#filterRow").dxCheckBox({
+				text: "Filter Row",
+				value: true,
+				onValueChanged: function(data) {
+				dataGrid.clearFilter();
+				dataGrid.option("filterRow.visible", data.value);
+				$(".apply-filter-option").css("display", data.value ? "block" : "none");
+				}
+				});
+
+				$("#headerFilter").dxCheckBox({
+				text: "Header Filter",
+				value: true,
+				onValueChanged: function(data) {
+				dataGrid.clearFilter();
+				dataGrid.option("headerFilter.visible", data.value);
+				}
+				});
+
+
+			});
+			$("#clear").dxButton({
+			text: "Clear",
+			onClick: function() {
+			$("#events ul").empty();
+			}
+			});
+});
+
+$(function(){
+var treeView;
+
+var syncTreeViewSelection = function(treeView, value){
+if (!value) {
+treeView.unselectAll();
+return;
+}
+
+value.forEach(function(key){
+treeView.selectItem(key);
+});
+};
+
+var makeAsyncDataSource = function(jsonFile){
+return new DevExpress.data.CustomStore({
+loadMode: "raw",
+key: "ID",
+load: function() {
+return $.getJSON("data/" + jsonFile);
+}
+});
+};
+
+$("#treeBox").dxDropDownBox({
+value: ["1_1"],
+valueExpr: "ID",
+displayExpr: "name",
+placeholder: "Select a value...",
+showClearButton: true,
+dataSource: makeAsyncDataSource("treeProducts.json"),
+contentTemplate: function(e){
+var value = e.component.option("value"),
+$treeView = $("&lt;div>;").dxTreeView({
+dataSource: e.component.option("dataSource"),
+dataStructure: "plain",
+keyExpr: "ID",
+parentIdExpr: "categoryId",
+selectionMode: "multiple",
+displayExpr: "name",
+selectByClick: true,
+onContentReady: function(args){
+syncTreeViewSelection(args.component, value);
+},
+selectNodesRecursive: false,
+showCheckBoxesMode: "normal",
+onItemSelectionChanged: function(args){
+var value = args.component.getSelectedNodesKeys();
+
+e.component.option("value", value);
+}
+});
+
+treeView = $treeView.dxTreeView("instance");
+
+e.component.on("valueChanged", function(args){
+var value = args.value;
+syncTreeViewSelection(treeView, value);
+});
+
+return $treeView;
+}
+});
+});
+
+
+
+			</script>
+
+<script>
+				var orders=[];
+				console.log(<%= res.length %>);
+				<% for(var i=0; i < res.length; i++) { %>;
+				<% for(var j=0; j < res[i].actiondetails.length; j++) { %>
+				<% if( j == 0 )
+				{ %>
+				var test = {
+				"Test Script/Test Case Title(Text)": "<%= res[i].name %>",
+				"Test Script/Test Case Description(Text)": "<%= res[i].description %>",
+				"Creator(Text)-TestScript": " ",
+				"Owner(Text)-TestScript": " ",
+				"Step Description(Text)-TestScript":"<%= res[i].actiondetails[j].name %>",
+				"Expected Result(Text)-TestScript":"<%= res[i].actiondetails[j].description %>",
+				"weight(Text)": " ",
+				"Priority(Text)": " ",
+				"Estimate in hour(Text)": " ",
+				"Application(Text) (Name : MOTSID)": " ",
+				"Regression/Progression(Text)": " ",
+				"TestPhase(Text)": " ",
+				"Non MOTS Team(Text)": " ",
+				"User 1(Text)": " ",
+				"User 2(Text)": " ",
+				"User 3(Text)": " ",
+				"User 4(Text)": " ",
+				"User 5(Text)": " ",
+				"Test Description(Text)": "<%= res[i].name %>",
+				"Expected Result(Text)-TestCase": "<%= res[i].description %>",
+				"Interface": " ",
+				};
+				orders.push(test);
+
+				<% } else{ %>
+				var test = {
+				"Test Script/Test Case Title(Text)": " ",
+				"Test Script/Test Case Description(Text)": " ",
+				"Creator(Text)-TestScript": " ",
+				"Owner(Text)-TestScript": " ",
+				"Step Description(Text)-TestScript":"<%= res[i].actiondetails[j].name %>",
+				"Expected Result(Text)-TestScript":"<%= res[i].actiondetails[j].description %>",
+				"weight(Text)": " ",
+				"Priority(Text)": " ",
+				"Estimate in hour(Text)": " ",
+				"Application(Text) (Name : MOTSID)": " ",
+				"Regression/Progression(Text)": " ",
+				"TestPhase(Text)": " ",
+				"Non MOTS Team(Text)": " ",
+				"User 1(Text)": " ",
+				"User 2(Text)": " ",
+				"User 3(Text)": " ",
+				"User 4(Text)": " ",
+				"User 5(Text)": " ",
+				"Test Description(Text)": " ",
+				"Expected Result(Text)-TestCase": " ",
+				"Interface": " ",
+				};
+				orders.push(test);
+				<% } %>
+				<% } %>
+				var test = {
+				"Test Script/Test Case Title(Text)": " ",
+				"Test Script/Test Case Description(Text)": " ",
+				"Creator(Text)-TestScript": " ",
+				"Owner(Text)-TestScript": " ",
+				"Step Description(Text)-TestScript":" ",
+				"Expected Result(Text)-TestScript":" ",
+				"weight(Text)": " ",
+				"Priority(Text)": " ",
+				"Estimate in hour(Text)": " ",
+				"Application(Text) (Name : MOTSID)": " ",
+				"Regression/Progression(Text)": " ",
+				"TestPhase(Text)": " ",
+				"Non MOTS Team(Text)": " ",
+				"User 1(Text)": " ",
+				"User 2(Text)": " ",
+				"User 3(Text)": " ",
+				"User 4(Text)": " ",
+				"User 5(Text)": " ",
+				"Test Description(Text)": " ",
+				"Expected Result(Text)-TestCase": " ",
+				"Interface": " ",
+				};
+				orders.push(test);
+				<% } %>
+				console.log(orders);
+
+
+
+				</script>
+				<script>
+				$(document).ready(function() {
+				$('#languages').multiselect({
+				nonSelectedText: 'Select Language'
+				});
+				});
+						 
+					
+		 
+
+</script>
+ </body>
+ </html>
